@@ -4,15 +4,15 @@
 .DESCRIPTION
     Tự động cài đặt Agents, Rules, và cấu hình Model Tiers cho môi trường Windows.
 .PARAMETER Tier
-    Tùy chọn gói model: auto (mặc định), starter, pro, frontier_elite
+    Tùy chọn gói model: auto, frontier_custom (mặc định cho chủ repo), starter, pro, frontier_elite
 .PARAMETER Force
     Ghi đè cấu hình cũ không cần hỏi lại
 #>
 
 [CmdletBinding()]
 param (
-    [ValidateSet("auto", "starter", "pro", "frontier_elite")]
-    [string]$Tier = "auto",
+    [ValidateSet("auto", "frontier_custom", "starter", "pro", "frontier_elite")]
+    [string]$Tier = "frontier_custom",
     [switch]$Force
 )
 
@@ -69,15 +69,16 @@ $ConfigContent.active_tier = $Tier
 $TargetConfigFile = Join-Path $ConfigTargetDir "model_tiers.json"
 $ConfigContent | ConvertTo-Json -Depth 5 | Set-Content -Path $TargetConfigFile -Encoding UTF8
 Write-Host "  -> Đã lưu cấu hình tier tại: $TargetConfigFile" -ForegroundColor Green
-Write-Host "     * Model cho Worker: $($ConfigContent.tiers.$Tier.worker_model)" -ForegroundColor DarkCyan
-Write-Host "     * Model cho Reviewer: $($ConfigContent.tiers.$Tier.reviewer_model)" -ForegroundColor DarkCyan
-Write-Host "     * Model cho Lead: $($ConfigContent.tiers.$Tier.lead_model)" -ForegroundColor DarkCyan
+Write-Host "     * Model cho Worker   : $($ConfigContent.tiers.$Tier.worker_model)" -ForegroundColor DarkCyan
+Write-Host "     * Model cho Reviewer : $($ConfigContent.tiers.$Tier.reviewer_model)" -ForegroundColor DarkCyan
+Write-Host "     * Model cho Lead     : $($ConfigContent.tiers.$Tier.lead_model)" -ForegroundColor DarkCyan
 
 # 4. Xác minh hoàn tất
 Write-Host "`n[5/5] Hoàn tất cài đặt thành công!" -ForegroundColor Green
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "Hệ thống sẵn sàng. Bạn có thể gõ /goal để kích hoạt chu trình!" -ForegroundColor White
 Write-Host "Để đổi gói cấu hình sau này, chạy:" -ForegroundColor Gray
+Write-Host "  .\install.ps1 -Tier auto" -ForegroundColor Gray
 Write-Host "  .\install.ps1 -Tier pro" -ForegroundColor Gray
-Write-Host "  .\install.ps1 -Tier frontier_elite" -ForegroundColor Gray
+Write-Host "  .\install.ps1 -Tier frontier_custom" -ForegroundColor Gray
 Write-Host "==========================================================" -ForegroundColor Cyan

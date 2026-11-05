@@ -4,102 +4,73 @@ Bộ đóng gói kiến trúc **Agent Loop + Multi-Agent Orchestration** với c
 
 ---
 
-## 🌟 Điểm nổi bật trong kiến trúc mới
+## 🌟 Điểm nổi bật trong kiến trúc
 
-1. **Chu trình phối hợp khép kín (Critic-in-the-Loop):**
-   - Không chỉ tạo kế hoạch rồi để code worker làm tự do.
-   - Khi `@code-worker` hoàn thành bản code sơ bộ kèm kết quả test, **Frontier Model (`@architect-reviewer`)** sẽ kiểm tra, soi edge cases, concurrency, security.
-   - Vòng lặp phản biện và tự sửa lỗi được kích hoạt tự động cho tới khi sản phẩm đạt chuẩn (`STATUS: APPROVED`), chặn lặp tối đa 3 vòng để tránh hao token.
-2. **Xuất báo cáo tổng kết (`SESSION_LOG.md`):**
-   - Sau khi hoàn thành, hệ thống xuất báo cáo tóm tắt các thay đổi, bug đã fix qua từng vòng lặp, và đưa ra 2-3 hướng tối ưu tiếp theo để người dùng lựa chọn (Performance, Hardening, Coverage...).
-3. **Cơ chế Dynamic Model Tiers:**
-   - **Tự động nhận diện (Auto-detect):** Dùng cơ chế bí danh thông minh (`inherit` / `pro` / `flash`), tự động trỏ tới model cao nhất có trong gói tài khoản hiện hành.
-   - **Tùy chọn đa dạng:** Hỗ trợ từ gói tiết kiệm (`starter`) đến gói tối đa công lực (`frontier_elite` gán cố định Argon 4, Opus 5.5).
+1. **Phối hợp đa tác tử theo chuyên môn:**
+   - `@code-worker`: Thu thập bối cảnh codebase, logs, hiện trạng (`SPEC_DIGEST.md`), sau đó băm nhỏ việc và trực tiếp viết mã/test.
+   - `@architect-reviewer`: Phản biện, bới móc edge cases, bảo mật, nghẽn hiệu năng (`SPEC_FEEDBACK.md`) và trực tiếp thẩm định diff code.
+   - `@architect-lead`: Chốt thiết kế kiến trúc toàn diện (`ARCH_PLAN.md`).
+2. **Actor-Critic Refinement Loop (Vòng lặp sửa lỗi tự động):**
+   - `@code-worker` tạo kết quả sơ bộ kèm test $\rightarrow$ **Frontier Reviewer** kiểm duyệt.
+   - Nếu còn lỗi, Reviewer đưa checklist chỉ thị cho `@code-worker` sửa lại. Vòng lặp tiếp tục cho đến khi đạt `STATUS: APPROVED` (tối đa 3 vòng lặp để chặn tốn token).
+3. **Báo cáo tổng kết & Gợi ý tối ưu (`SESSION_LOG.md`):**
+   - Tóm tắt module đã sửa, các bug đã giải quyết qua từng vòng, trạng thái test, và đưa ra 2-3 hướng tối ưu tiếp theo để người dùng quyết định.
+4. **Cơ chế Dynamic Model Tiers:**
+   - Dễ dàng thay đổi model cho từng agent theo cấu hình định sẵn hoặc tùy chỉnh tự do.
 
 ---
 
-## 🚀 Hướng dẫn cài đặt nhanh trên Windows
+## ⚙️ Cấu hình Model mặc định của Repo (Frontier Hybrid)
 
-Mở **PowerShell** (Run as Administrator hoặc User thường đều được) tại thư mục `antigravity-agent-loop-windows`:
+| Subagent | Vai trò | Model Mặc định | Đặc điểm |
+| :--- | :--- | :--- | :--- |
+| **`@code-worker`** | Worker & Context Collector | **Gemini 3.8 Flash** | Tốc độ cực nhanh, tiết kiệm token cho I/O và gõ code |
+| **`@architect-reviewer`**| Frontier Critic & Code Reviewer | **Argon 4** | Khả năng phản biện, soi lỗi logic và edge cases đỉnh cao |
+| **`@architect-lead`** | Lead Systems Architect | **Opus 5.5** | Tư duy kiến trúc toàn diện, thiết kế hệ thống vững chắc |
 
-### 1. Cài đặt chế độ Tự động (Khuyên dùng)
+---
+
+## 🚀 Hướng dẫn Cài đặt & Sử dụng
+
+Mở **PowerShell** (Run as Administrator hoặc thường):
+
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+cd antigravity-agent-loop-windows
 .\install.ps1
 ```
-*Hệ thống sẽ tự nhận diện gói tài khoản của bạn và kích hoạt model tối ưu nhất.*
+*Script sẽ tự động cài đặt cấu hình mặc định: **Code Worker (Flash 3.8)** + **Reviewer (Argon 4)** + **Lead (Opus 5.5)**.*
 
-### 2. Cài đặt theo gói Plan mong muốn:
-- **Gói Tiết kiệm / Miễn phí (Fast & Low token):**
+### Đổi gói cấu hình khác (Nếu cần):
+- **Gói Auto-detect (Tự nhận theo gói tài khoản người dùng):**
+  ```powershell
+  .\install.ps1 -Tier auto
+  ```
+- **Gói Tiết kiệm (Starter / Flash):**
   ```powershell
   .\install.ps1 -Tier starter
   ```
-- **Gói Pro (Cân bằng cao giữa tốc độ và suy luận):**
+- **Gói Cân bằng chuẩn (Pro):**
   ```powershell
   .\install.ps1 -Tier pro
   ```
-- **Gói Frontier Max / Siêu kiến trúc (Argon 4 & Opus 5.5):**
-  ```powershell
-  .\install.ps1 -Tier frontier_elite
-  ```
 
 ---
 
-## 📂 Quy trình vận hành tự động
+## 🛠️ Hướng dẫn Người dùng Tự Tùy Chỉnh Agent & Model
 
-Mỗi khi bạn gõ lệnh `/goal <Mục tiêu kỹ thuật>` trong khung chat:
-
-```
-[Mục tiêu khó /goal]
-        │
-        ▼
-1. @code-worker (Context codebase & logs)          ──► SPEC_DIGEST.md
-        │
-        ▼
-2. @architect-reviewer (Soi rủi ro kiến trúc)      ──► SPEC_FEEDBACK.md
-        │
-        ▼
-3. @architect-lead (Chốt giải pháp tối ưu)        ──► ARCH_PLAN.md
-        │
-        ▼
-4. @code-worker (Phân rã task chi tiết)           ──► TASKS.md
-        │
-        ▼
-┌────────────────── VÒNG LẶP ACTOR-CRITIC (Tối đa 3 vòng) ──────────────────┐
-│                                                                           │
-│   5. @code-worker (Viết code & Chạy Test)                                 │
-│            ▲                              │                               │
-│            │                              ▼                               │
-│     (Chỉ thị sửa)          Frontier Reviewer (@architect-reviewer)        │
-│            │                 ├─ Còn lỗi ──► Yêu cầu sửa & Lặp lại         │
-│            └─────────────────┤                                            │
-│                              └─ Đạt chuẩn (STATUS: APPROVED)              │
-│                                           │                               │
-└───────────────────────────────────────────┼───────────────────────────────┘
-                                            ▼
-6. Bàn giao & Báo cáo                      ──► SESSION_LOG.md
-(Tóm tắt công việc đã làm, danh sách test pass, gợi ý 2-3 hướng tối ưu tiếp theo)
-```
-
----
-
-## ⚙️ Tùy chỉnh Model Tiers theo ý muốn
-
-Bạn có thể chỉnh sửa trực tiếp file cấu hình tại:
+### 1. Thay đổi Model cho từng Agent
+Người dùng có thể mở tệp cấu hình tại:  
 `C:\Users\<Tên_User>\.gemini\config\agent-loop\model_tiers.json`
 
+Có thể sửa trực tiếp bất kỳ model nào bạn thích:
 ```json
 {
-  "active_tier": "auto",
+  "active_tier": "frontier_custom",
   "max_refinement_loops": 3,
   "tiers": {
-    "auto": {
-      "worker_model": "inherit",
-      "reviewer_model": "pro",
-      "lead_model": "pro"
-    },
-    "frontier_elite": {
-      "worker_model": "pro",
+    "frontier_custom": {
+      "worker_model": "flash",
       "reviewer_model": "Argon 4",
       "lead_model": "Opus 5.5"
     }
@@ -107,12 +78,32 @@ Bạn có thể chỉnh sửa trực tiếp file cấu hình tại:
 }
 ```
 
+### 2. Thêm hoặc Sửa Quyền Hạn / Vai trò của Subagent
+Tất cả subagent được định nghĩa bằng file JSON tại thư mục `agents/`:
+- `code-worker.json`: Có các công cụ đọc/chỉnh sửa file và chạy lệnh terminal (`execute_command`, `file_edit`).
+- `architect-reviewer.json` & `architect-lead.json`: Chỉ có công cụ đọc (`view_file`, `search_web`), an toàn tuyệt đối, không thay đổi file hay chạy lệnh lạ.
+
 ---
 
-## 🗑️ Cách Gỡ bỏ cài đặt (Uninstall)
+## ❓ Giải đáp: Khi gõ `/plan` và `/goal` có phải bấm Permission không?
 
-Khi không còn nhu cầu sử dụng:
+### 1. Khi dùng lệnh `/plan`:
+- Lệnh `/plan` được thiết kế theo quy chuẩn an toàn **Plan-First**.
+- Sau khi khảo sát và tạo ra tài liệu kế hoạch, Agent **chủ ý dừng lại** và yêu cầu người dùng bấm duyệt (Proceed) trước khi đụng vào code. Đây là tính năng bảo vệ an toàn giúp bạn kiểm soát hoàn toàn mã nguồn.
+
+### 2. Khi dùng lệnh `/goal`:
+- Lệnh `/goal` chạy theo chế độ **Autonomous Long-running Task (Nhiệm vụ tự vận hành)**.
+- **Để hệ thống chạy mượt mà không bị dừng lại hỏi quyền terminal/edit:**
+  Người dùng có thể bật chế độ Auto-Approve trong Antigravity CLI bằng cách thêm cờ khi khởi động hoặc cấu hình trust workspace:
+  ```bash
+  agy --auto-approve
+  ```
+  Khi đó, `@code-worker` và các subagent sẽ tự động chạy xuyên suốt quy trình từ phân tích $\rightarrow$ code $\rightarrow$ test $\rightarrow$ sửa lỗi cho tới khi hoàn tất 100%!
+
+---
+
+## 🗑️ Gỡ bỏ cài đặt (Uninstall)
+
 ```powershell
 .\uninstall.ps1
 ```
-Script sẽ tự động dọn sạch các subagent, rules và cấu hình liên quan mà không làm ảnh hưởng đến các cài đặt khác của Antigravity CLI.

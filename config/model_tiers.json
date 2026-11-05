@@ -1,13 +1,20 @@
 {
-  "active_tier": "auto",
+  "active_tier": "frontier_custom",
   "max_refinement_loops": 3,
   "tiers": {
     "auto": {
-      "name": "Auto Detect (Mặc định)",
+      "name": "Auto Detect",
       "description": "Tự động map theo gói tài khoản người dùng thông qua alias engine (inherit/pro/flash)",
       "worker_model": "inherit",
       "reviewer_model": "pro",
       "lead_model": "pro"
+    },
+    "frontier_custom": {
+      "name": "Frontier Hybrid (Cấu hình yêu cầu của Bạn)",
+      "description": "Code worker chạy Flash 3.8 siêu tốc, Lead chạy Opus 5.5, Reviewer chạy Argon 4 phản biện cao cấp",
+      "worker_model": "flash",
+      "reviewer_model": "Argon 4",
+      "lead_model": "Opus 5.5"
     },
     "starter": {
       "name": "Starter / Free Tier",
@@ -18,14 +25,14 @@
     },
     "pro": {
       "name": "Pro Tier",
-      "description": "Cân bằng hoàn hảo giữa tốc độ thực thi và năng lực phản biện logic",
+      "description": "Cân bằng giữa tốc độ thực thi và năng lực phản biện logic",
       "worker_model": "flash",
       "reviewer_model": "pro",
       "lead_model": "pro"
     },
     "frontier_elite": {
       "name": "Frontier Max / Enterprise",
-      "description": "Chỉ định các model cao cấp nhất như Argon 4, Claude 3.5 Sonnet / Opus, Gemini 1.5/3 Pro",
+      "description": "Toàn bộ subagent đều dùng model đỉnh cao nhất",
       "worker_model": "pro",
       "reviewer_model": "Argon 4",
       "lead_model": "Opus 5.5"
