@@ -1,0 +1,34 @@
+{
+  "active_tier": "auto",
+  "max_refinement_loops": 3,
+  "tiers": {
+    "auto": {
+      "name": "Auto Detect (Mặc định)",
+      "description": "Tự động map theo gói tài khoản người dùng thông qua alias engine (inherit/pro/flash)",
+      "worker_model": "inherit",
+      "reviewer_model": "pro",
+      "lead_model": "pro"
+    },
+    "starter": {
+      "name": "Starter / Free Tier",
+      "description": "Tối ưu hạn ngạch token, tốc độ phản hồi nhanh",
+      "worker_model": "flash_lite",
+      "reviewer_model": "flash",
+      "lead_model": "flash"
+    },
+    "pro": {
+      "name": "Pro Tier",
+      "description": "Cân bằng hoàn hảo giữa tốc độ thực thi và năng lực phản biện logic",
+      "worker_model": "flash",
+      "reviewer_model": "pro",
+      "lead_model": "pro"
+    },
+    "frontier_elite": {
+      "name": "Frontier Max / Enterprise",
+      "description": "Chỉ định các model cao cấp nhất như Argon 4, Claude 3.5 Sonnet / Opus, Gemini 1.5/3 Pro",
+      "worker_model": "pro",
+      "reviewer_model": "Argon 4",
+      "lead_model": "Opus 5.5"
+    }
+  }
+}
