@@ -4,14 +4,14 @@ Bộ đóng gói kiến trúc **Agent Loop + Multi-Agent Orchestration** với c
 
 ---
 
-## 💡 Nguồn Gốc Ý Tưởng & Vì Sao Bạn Nên Dùng Kiến Trúc Này?
+## Nguồn Gốc Ý Tưởng & Vì Sao Bạn Nên Dùng Kiến Trúc Này?
 
-### 🔴 Nỗi đau thực tế: Quota của Frontier Model quá ít!
-Các mô hình AI đỉnh cao hàng đầu thế giới (Frontier Models như **Argon 4**, **Claude 3.5 Opus / Sonnet**, **GPT-4o / o1**) sở hữu khả năng tư duy logic và kiến trúc vượt trội. Tuy nhiên, rào cản lớn nhất đối với lập trình viên là **giới hạn Rate Limit & Hạn ngạch (Quota) cực kỳ eo hẹp**:
+###  Nỗi đau thực tế: Quota của Frontier Model quá ít!
+Các mô hình AI đỉnh cao hàng đầu thế giới (Frontier Models như **Argon 4**, **Claude 5.5 Opus / Sonnet**, **GPT-6o / 6.1**) sở hữu khả năng tư duy logic và kiến trúc vượt trội. Tuy nhiên, rào cản lớn nhất đối với lập trình viên là **giới hạn Rate Limit & Hạn ngạch (Quota) cực kỳ eo hẹp**:
 - Chỉ cần đưa một nhiệm vụ lớn (quét mã nguồn, tìm log lỗi, sửa hàng chục file I/O...), chỉ sau **1-2 prompt** là bạn đã bị chặn vì chạm trần Quota giới hạn trong ngày/giờ.
 - Dùng một model Frontier đắt đỏ chỉ để làm những việc cơ bản như: đọc từng file, chạy regex, gõ từng dòng lệnh terminal là sự **lãng phí tài nguyên khủng khiếp**.
 
-### 🟢 Giải pháp: Kiến trúc Bất đối xứng (Asymmetric Multi-Agent Architecture)
+### Giải pháp: Kiến trúc Bất đối xứng (Asymmetric Multi-Agent Architecture)
 Kiến trúc này sinh ra để giải quyết triệt để bài toán *"Dùng Frontier Model mà không bị cạn Quota"*:
 
 1. **Giao việc nặng nhọc cho "Cửu vạn tốc độ cao" (`@code-worker` chạy Flash 3.8 / Flash-Lite):**
