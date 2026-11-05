@@ -10,7 +10,7 @@
       "lead_model": "pro"
     },
     "frontier_custom": {
-      "name": "Frontier Hybrid (Cấu hình yêu cầu của Bạn)",
+      "name": "Frontier Hybrid ",
       "description": "Code worker chạy Flash 3.8 siêu tốc, Lead chạy Opus 5.5, Reviewer chạy Argon 4 phản biện cao cấp",
       "worker_model": "flash",
       "reviewer_model": "Argon 4",
